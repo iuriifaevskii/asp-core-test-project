@@ -26,6 +26,7 @@ namespace WebApplication1
             {
                 configuration.RootPath = "ClientApp/build";
             });
+            services.AddCors();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -39,6 +40,11 @@ namespace WebApplication1
             {
                 app.UseExceptionHandler("/Error");
             }
+
+            app.UseCors(builder =>
+            builder.WithOrigins("http://localhost:3000", "http://localhost:51929")
+                   .AllowAnyHeader()
+            );
 
             app.UseStaticFiles();
             app.UseSpaStaticFiles();
