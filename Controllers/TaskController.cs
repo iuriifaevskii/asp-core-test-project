@@ -1,32 +1,56 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using System;
+using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using WebApplication1.Model;
+using WebApplication1.Models;
 
 namespace WebApplication1.Controllers
 {
     [Route("api/[controller]")]
     public class TaskController : Controller
     {
-        private static TaskModel[] tasks = new TaskModel[]
+        private Context db; 
+        public TaskController(Context context)
         {
-            new TaskModel(1, "make review", "simple description 1"),
-            new TaskModel(2, "clean a room", "simple description 2"),
-            new TaskModel(3, "build a house", "simple description 3")
-        };
+            db = context;
+        }
 
         [HttpGet("[action]")]
-        public IEnumerable<TaskModel> getAll()
+        public async Task<List<DailyTask>> getAll()
         {
-            return tasks;
+            return await db.DailyTasks.ToListAsync();
         }
 
         [HttpGet("[action]/{id?}")]
-        public TaskModel getOne(int? id)
+        public async Task<DailyTask> getOne(int? id)
         {
-            return tasks.FirstOrDefault(item => item.id == id);
+            return await db.DailyTasks.FirstOrDefaultAsync(item => item.Id == id);
+        }
+
+        [HttpPost("[action]")]
+        public async Task<DailyTask> createTask([FromBody] DailyTask task)
+        {
+            if (task == null)
+            {
+                return null;
+            }
+            db.DailyTasks.Add(task);
+            await db.SaveChangesAsync();
+            return task;
+        }
+
+        [HttpDelete("[action]/{id?}")]
+        public async Task<DailyTask> removeOne(int? id)
+        {
+            DailyTask task = db.DailyTasks.SingleOrDefault(item => item.Id == id);
+            if (task == null)
+            {
+                return null;
+            }
+            db.DailyTasks.Remove(task);
+            await db.SaveChangesAsync();
+            return task;
         }
     }
 }
