@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 
 function SingleTaskView(props) {
     const { task } = props;
@@ -13,7 +14,11 @@ function SingleTaskView(props) {
                 <div>No items with that id</div>
             }
         </div>
-    )
-}
+    );
+};
+
+SingleTaskView.propTypes = {
+    task: PropTypes.object
+};
 
 export default SingleTaskView;
