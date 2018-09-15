@@ -22,5 +22,11 @@ namespace WebApplication1.Controllers
         {
             return tasks;
         }
+
+        [HttpGet("[action]/{id?}")]
+        public TaskModel getOne(int? id)
+        {
+            return tasks.FirstOrDefault(item => item.id == id);
+        }
     }
 }
