@@ -4,53 +4,42 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using WebApplication1.Models;
+using WebApplication1.Services;
 
 namespace WebApplication1.Controllers
 {
     [Route("api/[controller]")]
     public class TaskController : Controller
     {
-        private Context db; 
-        public TaskController(Context context)
+        private TaskService taskService; 
+        public TaskController(TaskService service)
         {
-            db = context;
+            taskService = service;
+            taskService.Initialize();
         }
 
         [HttpGet("[action]")]
-        public async Task<List<DailyTask>> getAll()
+        public async Task<IEnumerable<DailyTask>> getAll()
         {
-            return await db.DailyTasks.ToListAsync();
+            return await taskService.getTasks();
         }
 
         [HttpGet("[action]/{id?}")]
         public async Task<DailyTask> getOne(int? id)
         {
-            return await db.DailyTasks.FirstOrDefaultAsync(item => item.Id == id);
+            return await taskService.getTask(id);
         }
 
         [HttpPost("[action]")]
         public async Task<DailyTask> createTask([FromBody] DailyTask task)
         {
-            if (task == null)
-            {
-                return null;
-            }
-            db.DailyTasks.Add(task);
-            await db.SaveChangesAsync();
-            return task;
+            return await taskService.addTask(task);
         }
 
         [HttpDelete("[action]/{id?}")]
         public async Task<DailyTask> removeOne(int? id)
         {
-            DailyTask task = db.DailyTasks.SingleOrDefault(item => item.Id == id);
-            if (task == null)
-            {
-                return null;
-            }
-            db.DailyTasks.Remove(task);
-            await db.SaveChangesAsync();
-            return task;
+            return await taskService.removeTask(id);
         }
     }
 }
