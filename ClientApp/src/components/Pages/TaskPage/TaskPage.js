@@ -47,17 +47,19 @@ class TaskPage extends Component {
             .then(() => alert('created successfully'))
             .catch(e => alert('error in createTask!'));
     }
-    
+
     render() {
         return (
             <div className="row">
                 <div className="col-sm-6">
+                    <h1>Task List</h1>
                     <TaskList
                         tasks={this.state.taskList}
                         _removeTask={this._removeTask}
                     />
                 </div>
                 <div className="col-sm-6">
+                    <h1>Create task</h1>
                     <CreateTaskForm
                         _createTask={this._createTask}
                     />

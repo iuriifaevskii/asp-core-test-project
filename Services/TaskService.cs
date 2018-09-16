@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -49,7 +50,7 @@ namespace WebApplication1.Services
             {
                 return null;
             }
-            db.DailyTasks.Add(task);
+            await db.DailyTasks.AddAsync(task);
             await db.SaveChangesAsync();
             return task;
         }
@@ -58,7 +59,7 @@ namespace WebApplication1.Services
         {
             if (id != null)
             {
-                DailyTask task = db.DailyTasks.SingleOrDefault(item => item.Id == id);
+                DailyTask task = await db.DailyTasks.SingleOrDefaultAsync(item => item.Id == id);
                 if (task == null)
                 {
                     return null;
@@ -68,6 +69,20 @@ namespace WebApplication1.Services
                 return task;
             }
             return null;
+        }
+
+        public async Task<DailyTask> updateTask(DailyTask task)
+        {
+            DailyTask newTask = await db.DailyTasks.SingleOrDefaultAsync(item => item.Id == task.Id);
+            if (newTask != null)
+            {
+                newTask.Name = task.Name;
+                newTask.Description = task.Description;
+                db.DailyTasks.Update(newTask);
+            }
+            
+            await db.SaveChangesAsync();
+            return newTask;
         }
     }
 }

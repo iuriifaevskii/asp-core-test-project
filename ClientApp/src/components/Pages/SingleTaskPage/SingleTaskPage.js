@@ -2,14 +2,21 @@ import React, {Component} from 'react';
 import axios from 'axios';
 
 import SingleTaskView from './SingleTaskView';
+import UpdateTaskForm from './UpdateTaskForm';
 
 class SingleTaskPage extends Component {
     constructor(props) {
         super(props);
         
         this.state = {
-            singleTask: {},
+            singleTask: {
+                id: null,
+                name: '',
+                description: ''
+            }
         }
+
+        this._updateTask = this._updateTask.bind(this);
     }
 
     componentDidMount() {
@@ -17,21 +24,47 @@ class SingleTaskPage extends Component {
         this._getSingleTask(id);
     }
 
+    _updateTask(task) {
+        return axios.put(`http://localhost:51929/api/Task/updateOne`, task)
+            .then(responseJson => {
+                this.setState({ ...this.state, singleTask: {...responseJson.data}})
+            });
+    }
+
     _getSingleTask(id) {
         return axios.get(`http://localhost:51929/api/Task/getOne/${id}`)
-            .then(responseJson => this.setState({singleTask: responseJson.data}))
+            .then(responseJson => {
+                this.setState({ ...this.state, singleTask: {...responseJson.data}})
+            })
     }
 
     render() {
-        const { singleTask } = this.state;
         return (
-            <div>
-                <SingleTaskView
-                    task={singleTask} 
-                />
+            <div className="row">
+                <div className="col-sm-6">
+                    <h1>Single task</h1>
+                    <SingleTaskView
+                        task={this.state.singleTask} 
+                    />
+                </div>
+                <div className="col-sm-6">
+                    <h1>Update task</h1>
+                    {
+                        this.state.singleTask.name!=='' && this.state.singleTask.description
+                        ?
+                        <UpdateTaskForm
+                            id={this.state.singleTask.id}
+                            name={this.state.singleTask.name}
+                            description={this.state.singleTask.description}
+                            _updateTask={this._updateTask}
+                        />
+                        :
+                        <div />
+                    }
+                </div>
             </div>
         );
     }
-}
+};
 
 export default SingleTaskPage;
