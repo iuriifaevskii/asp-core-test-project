@@ -41,5 +41,11 @@ namespace WebApplication1.Controllers
         {
             return await taskService.removeTask(id);
         }
+
+        [HttpPut("[action]")]
+        public async Task<DailyTask> updateOne([FromBody] DailyTask task)
+        {
+            return await taskService.updateTask(task);
+        }
     }
 }
