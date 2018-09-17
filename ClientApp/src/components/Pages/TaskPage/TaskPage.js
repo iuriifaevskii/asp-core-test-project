@@ -53,10 +53,12 @@ class TaskPage extends Component {
             <div className="row">
                 <div className="col-sm-6">
                     <h1>Task List</h1>
-                    <TaskList
+                    {this.state.taskList.length
+                    ? <TaskList
                         tasks={this.state.taskList}
                         _removeTask={this._removeTask}
                     />
+                    : <div />}
                 </div>
                 <div className="col-sm-6">
                     <h1>Create task</h1>

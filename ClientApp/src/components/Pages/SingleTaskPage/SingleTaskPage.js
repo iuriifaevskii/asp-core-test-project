@@ -43,9 +43,11 @@ class SingleTaskPage extends Component {
             <div className="row">
                 <div className="col-sm-6">
                     <h1>Single task</h1>
-                    <SingleTaskView
+                    {this.state.singleTask.id
+                    ? <SingleTaskView
                         task={this.state.singleTask} 
                     />
+                    : <div />}
                 </div>
                 <div className="col-sm-6">
                     <h1>Update task</h1>
