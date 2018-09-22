@@ -15,7 +15,6 @@ namespace WebApplication1.Controllers
         public TaskController(TaskService service)
         {
             taskService = service;
-            taskService.Initialize();
         }
 
         [HttpGet("[action]")]
