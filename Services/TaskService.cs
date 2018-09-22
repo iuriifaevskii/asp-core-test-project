@@ -16,19 +16,6 @@ namespace WebApplication1.Services
             db = context;
         }
 
-        public void Initialize()
-        {
-            if (!db.DailyTasks.Any())
-            {
-                db.DailyTasks.AddRange(
-                    new DailyTask { Name = "Task 1", Description = "Description task 1" },
-                    new DailyTask { Name = "Task 2", Description = "Description task 2" },
-                    new DailyTask { Name = "Task 3", Description = "Description task 3" }
-                );
-                db.SaveChanges();
-            }
-        }
-
         public async Task<IEnumerable<DailyTask>>getTasks()
         {
             return await db.DailyTasks.ToListAsync();
